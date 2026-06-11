@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CE Brief — Oracle Cloud Engineering</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0A1628;
+    --card:    #111E35;
+    --border:  #1E3050;
+    --accent:  #C74634;
+    --accent2: #E85D4A;
+    --white:   #FFFFFF;
+    --muted:   #8892A4;
+    --subtle:  #3A4A60;
+    --green:   #2DD4BF;
+    --mono:    'IBM Plex Mono', monospace;
+    --sans:    'Inter', sans-serif;
+  }
+
+  html, body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--sans);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--navy);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: -0.5px;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .logo-text span {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .header-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── LAYOUT ── */
+  .shell {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    min-height: calc(100vh - 61px);
+  }
+
+  /* ── INPUT PANEL ── */
+  .input-panel {
+    border-right: 1px solid var(--border);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--navy);
+  }
+
+  .panel-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  input, select, textarea {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--subtle);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892A4' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.12s;
+    letter-spacing: 0.03em;
+    user-select: none;
+  }
+
+  .tag:hover { border-color: var(--subtle); color: var(--white); }
+  .tag.active { background: var(--accent); border-color: var(--accent); color: var(--white); }
+
+  .generate-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 13px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .generate-btn:hover { background: var(--accent2); }
+  .generate-btn:active { transform: scale(0.99); }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-icon { font-size: 14px; }
+
+  /* ── OUTPUT PANEL ── */
+  .output-panel {
+    padding: 28px 32px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 16px;
+    text-align: center;
+    padding: 60px 40px;
+    min-height: 400px;
+  }
+
+  .empty-icon {
+    width: 56px; height: 56px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .empty-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .empty-sub {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 280px;
+    line-height: 1.6;
+  }
+
+  /* ── LOADING STATE ── */
+  .loading-state {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 0;
+  }
+
+  .scan-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .scan-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+
+  .signal-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 20px;
+  }
+
+  .bar {
+    width: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    animation: barAnim 1.2s infinite ease-in-out;
+  }
+
+  .bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+  .bar:nth-child(2) { height: 10px; animation-delay: 0.1s; }
+  .bar:nth-child(3) { height: 14px; animation-delay: 0.2s; }
+  .bar:nth-child(4) { height: 10px; animation-delay: 0.3s; }
+  .bar:nth-child(5) { height: 7px; animation-delay: 0.4s; }
+
+  @keyframes barAnim {
+    0%, 100% { background: var(--border); }
+    50% { background: var(--accent); }
+  }
+
+  .scan-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .source-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 9px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--muted);
+    animation: chipFade 2s infinite;
+  }
+
+  .source-chip:nth-child(1) { animation-delay: 0s; }
+  .source-chip:nth-child(2) { animation-delay: 0.4s; }
+  .source-chip:nth-child(3) { animation-delay: 0.8s; }
+  .source-chip:nth-child(4) { animation-delay: 1.2s; }
+  .source-chip:nth-child(5) { animation-delay: 1.6s; }
+
+  @keyframes chipFade {
+    0%, 100% { border-color: var(--border); color: var(--muted); }
+    50% { border-color: var(--accent); color: var(--white); }
+  }
+
+  /* ── BRIEF OUTPUT ── */
+  .brief-output {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .brief-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+
+  .brief-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .brief-company {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+
+  .brief-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .meta-chip::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--subtle);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── BRIEF SECTIONS ── */
+  .brief-section {
+    margin-bottom: 28px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .section-icon {
+    width: 28px; height: 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .section-body {
+    font-size: 13px;
+    color: #C8D0DC;
+    line-height: 1.7;
+  }
+
+  .brief-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .brief-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .card-value {
+    font-size: 13px;
+    color: var(--white);
+    line-height: 1.5;
+  }
+
+  .pain-list, .question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pain-item, .question-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #C8D0DC;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 14px;
+  }
+
+  .pain-item {
+    border-left: 3px solid var(--accent);
+  }
+
+  .question-item {
+    border-left: 3px solid var(--green);
+  }
+
+  .question-item .q-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .solution-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .solution-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+
+  .sol-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(199,70,52,0.12);
+    border: 1px solid rgba(199,70,52,0.3);
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .sol-text {
+    font-size: 13px;
+    color: #C8D0DC;
+    line-height: 1.6;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0 28px;
+  }
+
+  .copy-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .copy-btn:hover { border-color: var(--accent); color: var(--white); }
+
+  .brief-footer {
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-note {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--subtle);
+  }
+
+  /* ── ERROR STATE ── */
+  .error-box {
+    background: rgba(199,70,52,0.08);
+    border: 1px solid rgba(199,70,52,0.3);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13px;
+    color: #E8A09A;
+    display: none;
+    margin-top: 8px;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  @media (max-width: 800px) {
+    .shell { grid-template-columns: 1fr; }
+    .input-panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .brief-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">CE</div>
+    <div class="logo-text">TechBrief <span>/ Oracle Cloud Engineering</span></div>
+  </div>
+  <div class="header-badge">JAPAC AI Challenge</div>
+</header>
+
+<div class="shell">
+
+  <!-- INPUT PANEL -->
+  <aside class="input-panel">
+    <div>
+      <div class="panel-label">Engagement Context</div>
+    </div>
+
+    <div class="field-group">
+      <label>COMPANY NAME</label>
+      <input type="text" id="company" placeholder="e.g. ANZ Banking Group" />
+    </div>
+
+    <div class="field-group">
+      <label>INDUSTRY</label>
+      <select id="industry">
+        <option value="">Select industry…</option>
+        <option>Financial Services</option>
+        <option>Retail & Consumer</option>
+        <option>Telecommunications</option>
+        <option>Healthcare & Life Sciences</option>
+        <option>Government & Public Sector</option>
+        <option>Manufacturing</option>
+        <option>Energy & Utilities</option>
+        <option>Technology</option>
+        <option>Education</option>
+        <option>Media & Entertainment</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>OPPORTUNITY TYPE</label>
+      <div class="tag-row" id="opp-tags">
+        <div class="tag active" data-val="New Logo">New Logo</div>
+        <div class="tag" data-val="Expansion">Expansion</div>
+        <div class="tag" data-val="Renewal">Renewal</div>
+        <div class="tag" data-val="Migration">Migration</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>ORACLE PRODUCTS IN SCOPE</label>
+      <div class="tag-row" id="product-tags">
+        <div class="tag active" data-val="OCI">OCI</div>
+        <div class="tag" data-val="AI Autonomous DB">AI Autonomous DB</div>
+        <div class="tag" data-val="Exadata">Exadata</div>
+        <div class="tag" data-val="HeatWave">HeatWave</div>
+        <div class="tag" data-val="OKE">OKE</div>
+        <div class="tag" data-val="Analytics">Analytics</div>
+        <div class="tag" data-val="Integration">Integration</div>
+        <div class="tag" data-val="Security">Security</div>
+        <div class="tag" data-val="Gen AI">Gen AI</div>
+        <div class="tag" data-val="Multicloud">Multicloud</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>KNOWN CONTEXT (optional)</label>
+      <textarea id="context" placeholder="Paste any known facts: recent news, current stack, pain points raised in discovery, stakeholder names…"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label>MEETING TYPE</label>
+      <select id="meeting">
+        <option>Initial Discovery</option>
+        <option>Technical Deep Dive</option>
+        <option>Architecture Review</option>
+        <option>Executive Briefing</option>
+        <option>Proof of Concept Kickoff</option>
+        <option>Commercial / Negotiation</option>
+      </select>
+    </div>
+
+    <button class="generate-btn" id="generate-btn" onclick="generateBrief()">
+      <span class="btn-icon">⚡</span> Generate Technical Brief
+    </button>
+
+    <div class="error-box" id="error-box"></div>
+  </aside>
+
+  <!-- OUTPUT PANEL -->
+  <main class="output-panel" id="output-panel">
+
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">📋</div>
+      <div class="empty-title">No brief generated yet</div>
+      <div class="empty-sub">Fill in the engagement context and generate a tailored technical brief for your next customer meeting.</div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="loading-state" id="loading-state">
+      <div class="scan-header">
+        <div class="pulse-dot"></div>
+        <div class="scan-label" id="scan-label">SCANNING SIGNALS</div>
+        <div class="signal-bars">
+          <div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
+      <div class="scan-sources">
+        <div class="source-chip" id="chip1">Job Postings</div>
+        <div class="source-chip" id="chip2">Public Filings</div>
+        <div class="source-chip" id="chip3">Tech Stack Signals</div>
+        <div class="source-chip" id="chip4">Industry Context</div>
+        <div class="source-chip" id="chip5">Oracle Product Map</div>
+      </div>
+    </div>
+
+    <!-- Brief output -->
+    <div class="brief-output" id="brief-output"></div>
+
+  </main>
+</div>
+
+<script>
+  // Tag toggle logic
+  document.querySelectorAll('#opp-tags .tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      document.querySelectorAll('#opp-tags .tag').forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('#product-tags .tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      tag.classList.toggle('active');
+    });
+  });
+
+  function getSelectedTags(groupId) {
+    return [...document.querySelectorAll(`#${groupId} .tag.active`)].map(t => t.dataset.val);
+  }
+
+  function show(id) { document.getElementById(id).style.display = 'flex'; }
+  function hide(id) { document.getElementById(id).style.display = 'none'; }
+  function showBlock(id) { document.getElementById(id).style.display = 'block'; }
+
+  async function generateBrief() {
+    const company   = document.getElementById('company').value.trim();
+    const industry  = document.getElementById('industry').value;
+    const context   = document.getElementById('context').value.trim();
+    const meeting   = document.getElementById('meeting').value;
+    const oppType   = getSelectedTags('opp-tags').join(', ') || 'New Logo';
+    const products  = getSelectedTags('product-tags');
+
+    if (!company) {
+      const eb = document.getElementById('error-box');
+      eb.textContent = 'Please enter a company name before generating.';
+      eb.style.display = 'block';
+      return;
+    }
+    document.getElementById('error-box').style.display = 'none';
+
+    const btn = document.getElementById('generate-btn');
+    btn.disabled = true;
+
+    hide('empty-state');
+    hide('brief-output');
+    show('loading-state');
+    document.getElementById('scan-label').textContent = 'SCANNING SIGNALS';
+
+    const scanLabels = ['SCANNING SIGNALS', 'MAPPING STACK', 'BUILDING CONTEXT', 'DRAFTING BRIEF'];
+    let scanIdx = 0;
+    const scanInterval = setInterval(() => {
+      scanIdx = (scanIdx + 1) % scanLabels.length;
+      document.getElementById('scan-label').textContent = scanLabels[scanIdx];
+    }, 1800);
+
+    const productStr = products.length ? products.join(', ') : 'General OCI';
+
+    const prompt = [
+      "You are a seasoned Oracle Cloud Engineer preparing a pre-meeting technical brief.",
+      "Return ONLY a valid JSON object. No markdown, no backticks, no explanation before or after.",
+      "",
+      "Engagement details:",
+      "Company: " + company,
+      "Industry: " + (industry || "Unknown"),
+      "Opportunity type: " + oppType,
+      "Oracle products in scope: " + productStr,
+      "Meeting type: " + meeting,
+      "Known context: " + (context || "None provided"),
+      "",
+      "Return exactly this JSON shape (fill in real values, keep the same keys):",
+      JSON.stringify({
+        company: "__company name__",
+        industry: "__industry__",
+        oppType: "__opportunity type__",
+        meetingType: "__meeting type__",
+        products: ["__product1__"],
+        assumedStack: {
+          cloud: "Describe likely cloud and infrastructure environment",
+          database: "Describe likely database environment",
+          middleware: "Describe likely middleware and integration tooling",
+          legacy: "Describe likely legacy constraints"
+        },
+        painPoints: [
+          "Pain point 1: 1-2 sentences specific to this industry and opportunity",
+          "Pain point 2: 1-2 sentences",
+          "Pain point 3: 1-2 sentences"
+        ],
+        oraclePitch: [
+          { product: "product name", angle: "one sentence value angle for this customer" },
+          { product: "product name", angle: "one sentence value angle for this customer" },
+          { product: "product name", angle: "one sentence value angle for this customer" }
+        ],
+        discoveryQuestions: [
+          { num: "Q1", text: "Sharp open-ended question for this customer and meeting type" },
+          { num: "Q2", text: "Sharp open-ended question" },
+          { num: "Q3", text: "Sharp open-ended question" },
+          { num: "Q4", text: "Sharp open-ended question" },
+          { num: "Q5", text: "Sharp open-ended question" }
+        ],
+        watchOuts: "1-2 sentences on likely objections or sensitivities for this engagement",
+        competitorAlert: "1 sentence on most likely competitor and the key differentiator to lead with"
+      }, null, 2)
+    ].join("\n");
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 2048,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      clearInterval(scanInterval);
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        throw new Error(`API error ${res.status}: ${errText.slice(0, 300)}`);
+      }
+      const data = await res.json();
+
+      let raw = data.content?.find(b => b.type === 'text')?.text || '';
+      raw = raw.replace(/```json|```/g, '').trim();
+
+      // If the response was truncated, attempt to close the JSON cleanly
+      // by trimming to the last complete field and closing the object.
+      let brief;
+      try {
+        brief = JSON.parse(raw);
+      } catch (parseErr) {
+        // Find the last comma-terminated complete string value and truncate there,
+        // then close any open arrays and the root object.
+        const lastGood = raw.lastIndexOf('",');
+        if (lastGood > 0) {
+          let trimmed = raw.slice(0, lastGood + 1);
+          // Count unclosed [ and { to close them
+          const opens = (trimmed.match(/\[/g) || []).length - (trimmed.match(/\]/g) || []).length;
+          const braces = (trimmed.match(/\{/g) || []).length - (trimmed.match(/\}/g) || []).length;
+          trimmed += '"(truncated)"';
+          for (let i = 0; i < opens; i++)  trimmed += ']';
+          for (let i = 0; i < braces; i++) trimmed += '}';
+          brief = JSON.parse(trimmed);
+        } else {
+          throw parseErr;
+        }
+      }
+
+      hide('loading-state');
+      renderBrief(brief);
+
+    } catch (err) {
+      clearInterval(scanInterval);
+      hide('loading-state');
+      show('empty-state');
+      const eb = document.getElementById('error-box');
+      eb.textContent = `Failed to generate brief: ${err.message}. Check your connection and try again.`;
+      eb.style.display = 'block';
+      console.error(err);
+    }
+
+    btn.disabled = false;
+  }
+
+  function renderBrief(b) {
+    const now = new Date().toLocaleString('en-AU', {
+      day: 'numeric', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+
+    const painHTML = (b.painPoints || []).map(p =>
+      `<div class="pain-item">${p}</div>`
+    ).join('');
+
+    const pitchHTML = (b.oraclePitch || []).map(p =>
+      `<div class="solution-row">
+        <div class="sol-tag">${p.product}</div>
+        <div class="sol-text">${p.angle}</div>
+      </div>`
+    ).join('');
+
+    const qHTML = (b.discoveryQuestions || []).map(q =>
+      `<div class="question-item">
+        <div class="q-num">${q.num}</div>
+        ${q.text}
+      </div>`
+    ).join('');
+
+    const stackCards = `
+      <div class="brief-card">
+        <div class="card-label">Cloud / Infra</div>
+        <div class="card-value">${b.assumedStack?.cloud || '—'}</div>
+      </div>
+      <div class="brief-card">
+        <div class="card-label">Database</div>
+        <div class="card-value">${b.assumedStack?.database || '—'}</div>
+      </div>
+      <div class="brief-card">
+        <div class="card-label">Middleware</div>
+        <div class="card-value">${b.assumedStack?.middleware || '—'}</div>
+      </div>
+      <div class="brief-card">
+        <div class="card-label">Legacy Constraints</div>
+        <div class="card-value">${b.assumedStack?.legacy || '—'}</div>
+      </div>
+    `;
+
+    const productsStr = (b.products && b.products.length) ? b.products.join(' · ') : 'OCI';
+
+    const html = `
+      <div class="brief-header">
+        <div class="brief-eyebrow">Technical Brief</div>
+        <div class="brief-company">${b.company}</div>
+        <div class="brief-meta">
+          <div class="meta-chip">${b.industry}</div>
+          <div class="meta-chip">${b.oppType}</div>
+          <div class="meta-chip">${b.meetingType}</div>
+          <div class="meta-chip">${productsStr}</div>
+        </div>
+      </div>
+
+      <div class="brief-section">
+        <div class="section-header">
+          <div class="section-icon">🖥️</div>
+          <div class="section-title">Assumed Current Stack</div>
+        </div>
+        <div class="brief-cards">${stackCards}</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="brief-section">
+        <div class="section-header">
+          <div class="section-icon">⚠️</div>
+          <div class="section-title">Likely Pain Points</div>
+        </div>
+        <div class="pain-list">${painHTML}</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="brief-section">
+        <div class="section-header">
+          <div class="section-icon">🎯</div>
+          <div class="section-title">Oracle Solution Angles</div>
+        </div>
+        <div class="solution-rows">${pitchHTML}</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="brief-section">
+        <div class="section-header">
+          <div class="section-icon">💬</div>
+          <div class="section-title">Discovery Questions</div>
+        </div>
+        <div class="question-list">${qHTML}</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="brief-section">
+        <div class="section-header">
+          <div class="section-icon">🔍</div>
+          <div class="section-title">Watch-Outs & Competitor Alert</div>
+        </div>
+        <div class="section-body">
+          <div class="pain-item" style="margin-bottom:8px">${b.watchOuts || '—'}</div>
+          <div class="question-item">${b.competitorAlert || '—'}</div>
+        </div>
+      </div>
+
+      <div class="brief-footer">
+        <div class="footer-note">Generated ${now} · AI-assisted. Verify before use.</div>
+        <button class="copy-btn" onclick="copyBrief()">⎘ Copy to Clipboard</button>
+      </div>
+    `;
+
+    const out = document.getElementById('brief-output');
+    out.innerHTML = html;
+    out.style.display = 'flex';
+    out.style.flexDirection = 'column';
+    out._briefData = b;
+  }
+
+  function copyBrief() {
+    const out = document.getElementById('brief-output');
+    const b = out._briefData;
+    if (!b) return;
+
+    const lines = [
+      `TECHNICAL BRIEF — ${b.company}`,
+      `${b.industry} | ${b.oppType} | ${b.meetingType}`,
+      '',
+      '── ASSUMED STACK ──',
+      `Cloud/Infra: ${b.assumedStack?.cloud}`,
+      `Database: ${b.assumedStack?.database}`,
+      `Middleware: ${b.assumedStack?.middleware}`,
+      `Legacy: ${b.assumedStack?.legacy}`,
+      '',
+      '── LIKELY PAIN POINTS ──',
+      ...(b.painPoints || []).map((p, i) => `${i+1}. ${p}`),
+      '',
+      '── ORACLE SOLUTION ANGLES ──',
+      ...(b.oraclePitch || []).map(p => `[${p.product}] ${p.angle}`),
+      '',
+      '── DISCOVERY QUESTIONS ──',
+      ...(b.discoveryQuestions || []).map(q => `${q.num}. ${q.text}`),
+      '',
+      '── WATCH-OUTS ──',
+      b.watchOuts,
+      '',
+      '── COMPETITOR ALERT ──',
+      b.competitorAlert,
+    ];
+
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      if (btn) { btn.textContent = '✓ Copied'; setTimeout(() => { btn.innerHTML = '⎘ Copy to Clipboard'; }, 2000); }
+    });
+  }
+</script>
+</body>
+</html>
